@@ -1,0 +1,126 @@
+<!DOCTYPE html><html><head>
+        <meta charset="utf-8">
+        <title>Minesweeper</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                background: #212121;
+                font-family: "Noto sans", sans-serif;
+                font-weight: 400;
+                color: white;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            #app {
+                height: 100vh;
+                text-align: center;
+                background-color: #34156d;
+                color: #fff;
+                font-size: 1.5em;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #restart {
+                border: 2px solid #aaa;
+                font-size: 1.5rem;
+                background-color: #212121;
+                color: #fff;
+                border-radius: 0.5rem;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+            }
+
+            dialog {
+                width: 100vw;
+                height: 100vh;
+                background: #000a;
+                align-items: center;
+            }
+
+            dialog > * {
+                background-color: #34156d;
+                width: 400px;
+                margin: auto;
+                color: #fff;
+                font-size: 1rem;
+                text-align: center;
+                border: none;
+                padding: 2rem;
+                border-radius: 6px;
+                box-shadow: 0 0 40px rgba(53, 53, 53, 0.25),
+                    0 0 10px rgba(56, 56, 56, 0.5);
+                inset: 0;
+            }
+
+            dialog[open] {
+                display: flex;
+                animation: fade-in 300ms ease-in-out;
+            }
+
+            dialog[open] > * {
+                animation: appear 300ms ease-in-out;
+            }
+
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes appear {
+                from {
+                    opacity: 0;
+                    transform: translateY(-100%);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    
+<link rel="preload" href="/index-4ffa7679f161490d_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/index-4ffa7679f161490d.js"></head>
+<body>
+<script type="module">import init from '/index-4ffa7679f161490d.js';init('/index-4ffa7679f161490d_bg.wasm');</script><script>(function () {
+    var url = 'ws://' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
